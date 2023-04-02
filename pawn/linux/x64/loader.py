@@ -42,16 +42,7 @@ class Loader(object):
         self.assembler = Assembler()
         self.socket = Socket()
 
-    def generate_loader(self, *args, **kwargs) -> bytes:
-        """ Generate loader from get_loader().
-
-        :return bytes: shellcode
-        """
-
-        loader = self.get_loader(*args, **kwargs)
-        return self.assembler.assemble('x64', loader)
-
-    def get_loader(self, host: str, port: int, bind: bool = False,
+    def procfs_loader(self, host: str, port: int, bind: bool = False,
                    length: Optional[int] = None, reliable: bool = True) -> str:
         """ Generate in-memory ELF loader.
 
@@ -260,4 +251,4 @@ class Loader(object):
                     syscall
             """)
 
-        return payload
+        return self.assembler.assemble('x64', payload)
