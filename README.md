@@ -5,7 +5,7 @@ Pawn is a collection of Python techniques used for crafting, manipulating and in
 ## Features
 
 * Support for `Windows`, `macOS`, `Linux` and `Apple iOS`.
-* Support for such techniques like `Reflective DLL Injection` and `SO injection`.
+* Support for such techniques like `Reflective DLL Injection` and `ELF in-memory execution`.
 * Can generate stage0, stage1 and dynamic extensions for Pwny.
 
 ## Installation
