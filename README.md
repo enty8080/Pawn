@@ -29,4 +29,4 @@ print(len(stage0), len(stage1))
 
 ## Special Thanks
 
-* Some parts of assembly code were ported from free open-source project [Metasploit Framework](https://github.com/rapid7/metasploit-framework).
+* Some parts of **Windows assembly code** were ported from free open-source project [Metasploit Framework](https://github.com/rapid7/metasploit-framework).
