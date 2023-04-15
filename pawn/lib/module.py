@@ -22,4 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from .__main__ import Pawn
+
+class Module(object):
+    """ Subclass of pawn.lib module.
+
+    This subclass of pawn.lib module is intended for providing
+    wrapper for a module.
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.details = {
+            'Name': "",
+            'Authors': [
+                ''
+            ],
+            'Architecture': "",
+            'Platforms': ""
+        }
+
+    def run(self) -> None:
+        """ Run this module.
+
+        :return None: None
+        """
+
+        pass
