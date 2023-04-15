@@ -39,10 +39,11 @@ class Module(object):
                 ''
             ],
             'Architecture': "",
-            'Platforms': ""
+            'Platforms': "",
+            'Requires': []
         }
 
-    def run(self) -> None:
+    def run(self, *args, **kwargs) -> None:
         """ Run this module.
 
         :return None: None
