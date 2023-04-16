@@ -16,7 +16,7 @@ pip3 install git+https://github.com/EntySec/Pawn
 
 ## Examples
 
-Example of obtaining [ELF procfs loader](https://entysec.github.io/2023-04-02-remote-elf-loading/) with custom host and port.
+Example of obtaining [ELF procfs loader](https://blog.entysec.com/2023-04-02-remote-elf-loading/) with custom host and port.
 
 ```python
 from pawn import Pawn
