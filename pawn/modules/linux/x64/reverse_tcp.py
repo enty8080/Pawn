@@ -41,6 +41,7 @@ class PawnModule(Module, Socket, Assembler):
                 pop rax
                 xor rdi, rdi
                 push 0x{length.to_bytes(8, 'little').hex()}
+                pop rsi
                 push 0x7
                 pop rdx
                 xor r9, r9
