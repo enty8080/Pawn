@@ -40,7 +40,7 @@ class PawnModule(Module, Socket, Assembler):
                 push 0x9
                 pop rax
                 xor rdi, rdi
-                push 0x{length.to_bytes(8, 'little').hex()}
+                push {'0x%08x' % length}
                 pop rsi
                 push 0x7
                 pop rdx
