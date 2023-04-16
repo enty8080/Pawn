@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from typing import Optional
+from typing import Optional, Tuple, Any
 
 from .loader import Loader
+from .lib.module import Module
 
 
 class Pawn(object):
@@ -40,14 +41,15 @@ class Pawn(object):
         self.loader = Loader()
         self.modules = self.loader.load_modules()
 
-    def get_pawn(self, module: str, platform: Optional[str] = None,
-                 arch: Optional[str] = None, *args, **kwargs) -> bytes:
-        """ Get Pawn module payload.
+    def get_module(self, module: str, platform: Optional[str] = None,
+                   arch: Optional[str] = None) -> Module:
+        """ Get Pawn module object.
 
         :param str module: module name
         :param Optional[str] platform: platform to check compatibility with
         :param Optional[str] arch: architecture to check compatibility with
-        :return bytes: payload
+        :return Module: module object
+        :raises RuntimeError: with trailing error message
         """
 
         if module in self.modules:
@@ -59,6 +61,29 @@ class Pawn(object):
             if arch and arch != module.details['Architecture']:
                 raise RuntimeError(f"Architecture {arch} is not compatible with {module} module!")
 
-            return module.run(*args, **kwargs)
+            return module
 
         raise RuntimeError("Invalid Pawn module name!")
+
+    def get_pawn(self, module: str, platform: Optional[str] = None,
+                 arch: Optional[str] = None, *args, **kwargs) -> Tuple[Any, bool]:
+        """ Get Pawn module payload.
+
+        :param str module: module name
+        :param Optional[str] platform: platform to check compatibility with
+        :param Optional[str] arch: architecture to check compatibility with
+        :return Tuple[Any, bool]: payload and True if requires size else False
+        :raises RuntimeError: with trailing error message
+        """
+
+        try:
+            module = self.get_module(
+                module=module,
+                platform=platform,
+                arch=arch
+            )
+
+            return module.run(*args, **kwargs), module.details['SendSize']
+
+        except Exception:
+            return None, None

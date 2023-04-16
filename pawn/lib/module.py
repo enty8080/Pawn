@@ -40,7 +40,7 @@ class Module(object):
             ],
             'Architecture': "",
             'Platforms': "",
-            'Requires': []
+            'SendSize': False
         }
 
     def run(self, *args, **kwargs) -> None:
