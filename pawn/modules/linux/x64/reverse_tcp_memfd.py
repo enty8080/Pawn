@@ -68,7 +68,7 @@ class PawnModule(Module, Socket, Assembler):
             payload += dedent(f"""\
                     /* Push hardcoded ELF length if provided */
 
-                    push {'0x%08x' % length}
+                    push {hex(length)}
             """)
 
         else:
