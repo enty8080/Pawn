@@ -89,6 +89,8 @@ class PawnModule(Module, Socket, Assembler):
                 pop rax
                 syscall
 
+                pop rcx
+
                 /*
                  * Read phase to allocated memory space
                  * recvfrom(rdi, rsi, length, MSG_WAITALL, NULL, 0)
