@@ -66,7 +66,7 @@ class Loader(object):
     def load_modules(self) -> dict:
         """ Load modules.
 
-        :return dict: dict of modules commands
+        :return dict: dict of modules
         """
 
         return self.import_modules(f'{os.path.dirname(__file__)}/modules')
