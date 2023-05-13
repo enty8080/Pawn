@@ -30,7 +30,7 @@ class Loader(object):
     """ Subclass of pawn module.
 
     This subclass of pawn is intended for providng
-    Ghost Framework loader.
+    Pawn loader.
     """
 
     def __init__(self) -> None:
