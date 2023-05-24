@@ -16,7 +16,7 @@ class PawnModule(Module, Socket, Assembler):
     def __init__(self):
         super().__init__()
 
-        self.details = {
+        self.details.update({
             'Name': "linux/x64/memfd",
             'Authors': [
                 'Ivan Nikolsky (enty8080) - payload developer',
@@ -25,7 +25,7 @@ class PawnModule(Module, Socket, Assembler):
             'Architecture': "x64",
             'Platform': "linux",
             'SendSize': True
-        }
+        })
 
     def run(self, length: Optional[int] = None, reliable: bool = True) -> bytes:
         payload = dedent(f"""\
