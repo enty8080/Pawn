@@ -15,7 +15,7 @@ class PawnModule(Module, Socket, Assembler):
     def __init__(self):
         super().__init__()
 
-        self.details = {
+        self.details.update({
             'Name': "linux/mipsbe/reverse_tcp",
             'Authors': [
                 'Ivan Nikolsky (enty8080) - payload developer'
@@ -23,7 +23,7 @@ class PawnModule(Module, Socket, Assembler):
             'Architecture': "mipsbe",
             'Platform': "linux",
             'SendSize': False,
-        }
+        })
 
     def run(self, host: str, port: int, reliable: bool = True) -> bytes:
         host = self.pack_host(host)
