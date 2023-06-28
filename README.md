@@ -7,6 +7,9 @@
     <a href="https://github.com/EntySec/Pawn">
         <img src="https://img.shields.io/badge/language-Python-blue.svg">
     </a>
+    <a href="https://github.com/EntySec/Pawn/forks">
+        <img src="https://img.shields.io/github/forks/EntySec/Pawn?color=green">
+    </a>
     <a href="https://github.com/EntySec/Pawn/stargazers">
         <img src="https://img.shields.io/github/stars/EntySec/Pawn?color=yellow">
     </a>
