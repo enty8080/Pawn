@@ -58,7 +58,8 @@ class Loader(object):
                         module = module.PawnModule()
 
                         modules[module.details['Name']] = module
-                    except Exception:
+
+                    except BaseException:
                         pass
 
         return modules
