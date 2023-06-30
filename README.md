@@ -14,7 +14,7 @@
         <img src="https://img.shields.io/github/stars/EntySec/Pawn?color=yellow">
     </a>
     <a href="https://www.codefactor.io/repository/github/EntySec/Pawn">
-        <img src="https://www.codefactor.io/repository/github/EntySec/Pawn/badge" alt="CodeFactor" />
+        <img src="https://www.codefactor.io/repository/github/EntySec/Pawn/badge">
     </a>
 </p>
 
