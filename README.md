@@ -13,6 +13,9 @@
     <a href="https://github.com/EntySec/Pawn/stargazers">
         <img src="https://img.shields.io/github/stars/EntySec/Pawn?color=yellow">
     </a>
+    <a href="https://www.codefactor.io/repository/github/EntySec/Pawn">
+        <img src="https://www.codefactor.io/repository/github/EntySec/Pawn/badge" alt="CodeFactor" />
+    </a>
 </p>
 
 Pawn is a collection of Python techniques used for crafting, manipulating and injecting payloads.
