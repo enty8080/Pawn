@@ -47,45 +47,45 @@ class Exit(object):
         """
 
         block = dedent("""\
-            exit:
-                pop rax
+        exit:
+            pop rax
         """)
 
         if type == 'seh':
             block += dedent(f"""\
-                    push 0
-                    pop  rcx
-                    mov  ebx, {self.text.block_api_hash('kernel32.dll', 'SetUnhandledExceptionFilter')}
-                    mov  r10d, ebx
-                    call rbp
-                    push 0
-                    ret
+                push 0
+                pop  rcx
+                mov  ebx, {self.text.block_api_hash('kernel32.dll', 'SetUnhandledExceptionFilter')}
+                mov  r10d, ebx
+                call rbp
+                push 0
+                ret
             """)
 
         elif type == 'thread':
             block += dedent(f"""\
-                    push 0
-                    pop  rcx
-                    mov  ebx, {self.text.block_api_hash('kernel32.dll', 'ExitThread')}
-                    mov  r10d, ebx
-                    call rbp
+                push 0
+                pop  rcx
+                mov  ebx, {self.text.block_api_hash('kernel32.dll', 'ExitThread')}
+                mov  r10d, ebx
+                call rbp
             """)
 
         elif type == 'process':
             block += dedent(f"""\
-                    push 0
-                    pop  rcx
-                    mov  r10, {self.text.block_api_hash('kernel32.dll', 'ExitProcess')}
-                    call rbp
+                push 0
+                pop  rcx
+                mov  r10, {self.text.block_api_hash('kernel32.dll', 'ExitProcess')}
+                call rbp
             """)
 
         elif type == 'sleep':
             block += dedent(f"""\
-                    push 300000
-                    pop  rcx
-                    mov  r10, {self.text.block_api_hash('kernel32.dll', 'Sleep')}
-                    call rbp
-                    jmp  exit
+                push 300000
+                pop  rcx
+                mov  r10, {self.text.block_api_hash('kernel32.dll', 'Sleep')}
+                call rbp
+                jmp  exit
             """)
 
         return block

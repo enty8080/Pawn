@@ -47,51 +47,51 @@ class Exit(object):
         """
 
         block = dedent("""\
-            exit:
+        exit:
         """)
 
         if type == 'seh':
             block += dedent(f"""\
-                    mov  ebx, {self.text.block_api_hash('kernel32.dll', 'SetUnhandledExceptionFilter')}
-                    push 0
-                    push ebx
-                    call ebp
-                    push 0
-                    ret
+                mov  ebx, {self.text.block_api_hash('kernel32.dll', 'SetUnhandledExceptionFilter')}
+                push 0
+                push ebx
+                call ebp
+                push 0
+                ret
             """)
 
         elif type == 'thread':
             block += dedent(f"""\
-                    mov  ebx, {self.text.block_api_hash('kernel32.dll', 'ExitThread')}
-                    push {self.text.block_api_hash('kernel32.dll', 'GetVersion')}
-                    call ebp
-                    cmp  al, 6
-                    jl   quit
-                    cmp  bl, 0xe0
-                    jne  quit
-                    mov  ebx, {self.text.block_api_hash('ntdll.dll', 'RtlExitUserThread')}
+                mov  ebx, {self.text.block_api_hash('kernel32.dll', 'ExitThread')}
+                push {self.text.block_api_hash('kernel32.dll', 'GetVersion')}
+                call ebp
+                cmp  al, 6
+                jl   quit
+                cmp  bl, 0xe0
+                jne  quit
+                mov  ebx, {self.text.block_api_hash('ntdll.dll', 'RtlExitUserThread')}
 
-                quit:
-                    push 0
-                    push ebx
-                    call ebp
+            quit:
+                push 0
+                push ebx
+                call ebp
             """)
 
         elif type == 'process':
             block += dedent(f"""\
-                    mov  ebx, {self.text.block_api_hash('kernel32.dll', 'ExitProcess')}
-                    push 0
-                    push ebx
-                    call ebp
+                mov  ebx, {self.text.block_api_hash('kernel32.dll', 'ExitProcess')}
+                push 0
+                push ebx
+                call ebp
             """)
 
         elif type == 'sleep':
             block += dedent(f"""\
-                    mov  ebx, {self.text.block_api_hash('kernel32.dll', 'Sleep')}
-                    push 300000
-                    push ebx
-                    call ebp
-                    jmp  exit
+                mov  ebx, {self.text.block_api_hash('kernel32.dll', 'Sleep')}
+                push 300000
+                push ebx
+                call ebp
+                jmp  exit
             """)
 
         return block

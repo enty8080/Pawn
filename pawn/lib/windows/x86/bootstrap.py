@@ -54,6 +54,7 @@ class Bootstrap(object):
         """
 
         payload = dedent(f"""\
+        start:
             dec  ebp
             pop  edx
             call 5
