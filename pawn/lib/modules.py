@@ -25,7 +25,6 @@ SOFTWARE.
 from typing import Union, Optional
 
 from pawn.lib.module import Module
-from pawn.lib.options import Options
 
 
 class Modules(object):
@@ -45,7 +44,6 @@ class Modules(object):
         super().__init__()
 
         self.modules = modules
-        self.options = Options()
 
     def get_module(self, module: str) -> Union[Module, None]:
         """ Get Pawn module object.
@@ -114,17 +112,6 @@ class Modules(object):
                     missed.append(option)
 
         return missed
-
-    def set_option_value(self, module: Module, option: str, value: Optional[str] = None) -> bool:
-        """ Set module option value.
-
-        :param Module module: module object
-        :param str option: option name
-        :param Optional[str] value: option value
-        :return bool: True if success else False
-        """
-
-        return self.options.set_option(module, option, value)
 
     def run_module(self, module: Module) -> bytes:
         """ Run module.

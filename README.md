@@ -48,8 +48,8 @@ module = pawn.get_pawn(
     type='reverse_tcp'
 )
 
-pawn.set_module_option(module, 'host', '127.0.0.1')
-pawn.set_module_option(module, 'port', 8888)
+module.set('host', '127.0.0.1')
+module.set('port', 8888)
 
 payload = pawn.run_module(module)
 print(len(payload))

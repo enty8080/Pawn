@@ -57,17 +57,6 @@ class Pawn(object):
                 module, platform, arch, type):
             return self.modules.get_module(module)
 
-    def set_pawn_option(self, module: Module, option: str, value: Optional[str] = None) -> bool:
-        """ Set pawn module option value.
-
-        :param Module module: module object
-        :param str option: option name
-        :param Optional[str] value: value
-        :return bool: True if success else False
-        """
-
-        return self.modules.set_option_value(module, option, value)
-
     def run_pawn(self, module: Module) -> bytes:
         """ Run pawn module.
 

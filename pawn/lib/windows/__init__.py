@@ -38,6 +38,9 @@ class Windows(object):
     def __init__(self) -> None:
         super().__init__()
 
+        self.x64_reverse_tcp = X64ReverseTCP()
+        self.x86_reverse_tcp = X86ReverseTCP()
+
     def get_payload(self, arch: str, type: str = 'reverse_tcp',
                     *args, **kwargs) -> bytes:
         """ Obtain stage payload for the specific platform
@@ -49,13 +52,13 @@ class Windows(object):
 
         if arch == 'x86':
             if type == 'reverse_tcp':
-                return X86ReverseTCP().get_payload(*args, **kwargs)
+                return self.x86_reverse_tcp.get_payload(*args, **kwargs)
 
             raise RuntimeError(f"Invalid payload type: {type}!")
 
         elif arch == 'x64':
             if type == 'reverse_tcp':
-                return X64ReverseTCP().get_payload(*args, **kwargs)
+                return self.x64_reverse_tcp.get_payload(*args, **kwargs)
 
             raise RuntimeError(f"Invalid payload type: {type}!")
 
