@@ -57,53 +57,40 @@ class Modules(object):
         if module in self.modules:
             return self.modules[module]
 
-    def check_module_multiple(self, module: str, platforms: list, arches: list, types: list) -> bool:
-        """ Check if module met multiple requirements.
-
-        :param str module: module name
-        :param list platforms: platforms to check module for
-        :param list arches: architectures to check module for
-        :param list types: types to check module for
-        :return bool: True if compatible else False
-        """
-
-        module = self.get_module(module)
-
-        if module:
-            if platforms and module.details['Platform'] not in platforms:
-                return False
-
-            if arches and module.details['Arch'] not in arches:
-                return False
-
-            if types and module.details['Type'] not in types:
-                return False
-
-            return True
-
-        return False
-
-    def check_module(self, module: str, platform: str, arch: str, type: str) -> bool:
+    def check_module(self, module: str, platform: Union[list, str],
+                     arch: Union[list, str], type: Union[list, str]) -> bool:
         """ Check if module met the requirements.
 
         :param str module: module name
-        :param str platform: platform to check module for
-        :param str arch: architecture to check module for
-        :param str type: type to check module for
+        :param Union[list, str] platform: platform to check module for
+        :param Union[list, str] arch: architecture to check module for
+        :param Union[list, str] type: type to check module for
         :return bool: True if compatible else False
         """
 
         module = self.get_module(module)
 
         if module:
-            if platform and module.details['Platform'] != platform:
-                return False
+            if isinstance(platform, str):
+                if platform and module.details['Platform'] != platform:
+                    return False
+            else:
+                if platform and module.details['Platform'] not in platform:
+                    return False
 
-            if arch and module.details['Arch'] != arch:
-                return False
+            if isinstance(arch, str):
+                if arch and module.details['Arch'] != arch:
+                    return False
+            else:
+                if arch and module.details['Arch'] not in arch:
+                    return False
 
-            if type and module.details['Type'] != type:
-                return False
+            if isinstance(platform, str):
+                if type and module.details['Type'] != type:
+                    return False
+            else:
+                if type and module.details['Type'] not in type:
+                    return False
 
             return True
 

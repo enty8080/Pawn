@@ -42,19 +42,19 @@ class Pawn(object):
         self.loader = Loader()
         self.modules = Modules(self.loader.load_modules())
 
-    def get_pawn(self, module: str, platforms: list,
-                 arches: list, types: list) -> Union[Module, None]:
+    def get_pawn(self, module: str, platform: Union[list, str], arch: Union[list, str],
+                 type: Union[list, str]) -> Union[Module, None]:
         """ Get pawn module.
 
         :param str module: module name
-        :param list platforms: list of supported platforms
-        :param list arches: list of supported architectures
-        :param list types: list of supported types
+        :param Union[list, str] platform: list of supported platforms
+        :param Union[list, str] arch: list of supported architectures
+        :param Union[list, str] type: list of supported types
         :return Union[Module, None]: module object or None
         """
 
-        if self.modules.check_module_multiple(
-                module, platforms, arches, types):
+        if self.modules.check_module(
+                module, platform, arch, type):
             return self.modules.get_module(module)
 
     def set_pawn_option(self, module: Module, option: str, value: Optional[str] = None) -> bool:
