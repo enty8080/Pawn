@@ -22,32 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from pawn.lib.option import *
-
-
-class Module(object):
-    """ Subclass of pawn.lib module.
-
-    This subclass of pawn.lib module is intended for providing
-    wrapper for a module.
-    """
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.details = {
-            'Name': "",
-            'Authors': [
-                ''
-            ],
-            'Arch': "",
-            'Platforms': "",
-        }
-
-    def run(self) -> None:
-        """ Run this module.
-
-        :return None: None
-        """
-
-        pass
+from .blocks import Blocks
+from .bootstrap import Bootstrap
+from .exit import Exit
+from .reverse_tcp import ReverseTCP

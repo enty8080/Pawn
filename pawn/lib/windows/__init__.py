@@ -22,32 +22,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from pawn.lib.option import *
+from .reflective_dll import ReflectiveDLL
+
+from .x86 import ReverseTCP as X86ReverseTCP
+from .x64 import ReverseTCP as X64ReverseTCP
 
 
-class Module(object):
-    """ Subclass of pawn.lib module.
+class Windows(object):
+    """ Main class of pawn.windows module.
 
-    This subclass of pawn.lib module is intended for providing
-    wrapper for a module.
+    This main class of pawn.windows module is intended for
+    providing Pawn implementations for Windows.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.details = {
-            'Name': "",
-            'Authors': [
-                ''
-            ],
-            'Arch': "",
-            'Platforms': "",
-        }
+    def get_payload(self, arch: str, type: str = 'reverse_tcp',
+                    *args, **kwargs) -> bytes:
+        """ Obtain stage payload for the specific platform
+        and architecture.
 
-    def run(self) -> None:
-        """ Run this module.
-
-        :return None: None
+        :param str arch: architecture
+        :param str type: stage type
         """
 
-        pass
+        if arch == 'x86':
+            if type == 'reverse_tcp':
+                return X86ReverseTCP().get_payload(*args, **kwargs)
+
+            raise RuntimeError(f"Invalid payload type: {type}!")
+
+        elif arch == 'x64':
+            if type == 'reverse_tcp':
+                return X64ReverseTCP().get_payload(*args, **kwargs)
+
+            raise RuntimeError(f"Invalid payload type: {type}!")
+
+        raise RuntimeError(f"Invalid payload architecture: {arch}!")

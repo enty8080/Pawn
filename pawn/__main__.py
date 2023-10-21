@@ -22,10 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from typing import Optional, Tuple, Any
+from typing import Union, Optional
 
-from .loader import Loader
-from .lib.module import Module
+from pawn.lib.loader import Loader
+from pawn.lib.module import Module
+from pawn.lib.modules import Modules
 
 
 class Pawn(object):
@@ -39,51 +40,39 @@ class Pawn(object):
         super().__init__()
 
         self.loader = Loader()
-        self.modules = self.loader.load_modules()
+        self.modules = Modules(self.loader.load_modules())
 
-    def get_module(self, module: str, platform: Optional[str] = None,
-                   arch: Optional[str] = None) -> Module:
-        """ Get Pawn module object.
-
-        :param str module: module name
-        :param Optional[str] platform: platform to check compatibility with
-        :param Optional[str] arch: architecture to check compatibility with
-        :return Module: module object
-        :raises RuntimeError: with trailing error message
-        """
-
-        if module in self.modules:
-            module = self.modules[module]
-
-            if platform and platform != module.details['Platform']:
-                raise RuntimeError(f"Platform {platform} is not compatible with {module} module!")
-
-            if arch and arch != module.details['Architecture']:
-                raise RuntimeError(f"Architecture {arch} is not compatible with {module} module!")
-
-            return module
-
-        raise RuntimeError("Invalid Pawn module name!")
-
-    def get_pawn(self, module: str, platform: Optional[str] = None,
-                 arch: Optional[str] = None, *args, **kwargs) -> Tuple[Any, bool]:
-        """ Get Pawn module payload.
+    def get_pawn(self, module: str, platforms: list,
+                 arches: list, types: list) -> Union[Module, None]:
+        """ Get pawn module.
 
         :param str module: module name
-        :param Optional[str] platform: platform to check compatibility with
-        :param Optional[str] arch: architecture to check compatibility with
-        :return Tuple[Any, bool]: payload and True if requires size else False
-        :raises RuntimeError: with trailing error message
+        :param list platforms: list of supported platforms
+        :param list arches: list of supported architectures
+        :param list types: list of supported types
+        :return Union[Module, None]: module object or None
         """
 
-        try:
-            module = self.get_module(
-                module=module,
-                platform=platform,
-                arch=arch
-            )
+        if self.modules.check_module_multiple(
+                module, platforms, arches, types):
+            return self.modules.get_module(module)
 
-            return module.run(*args, **kwargs), module.details['SendSize']
+    def set_pawn_option(self, module: Module, option: str, value: Optional[str] = None) -> bool:
+        """ Set pawn module option value.
 
-        except Exception:
-            return None, None
+        :param Module module: module object
+        :param str option: option name
+        :param Optional[str] value: value
+        :return bool: True if success else False
+        """
+
+        return self.modules.set_option_value(module, option, value)
+
+    def run_pawn(self, module: Module) -> bytes:
+        """ Run pawn module.
+
+        :param Module module: module object
+        :return bytes: module output
+        """
+
+        return self.modules.run_module(module)
