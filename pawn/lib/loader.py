@@ -22,8 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import importlib.util
 import os
+import importlib.util
+
+from pawn.lib.options import Options
 
 
 class Loader(object):
@@ -36,8 +38,9 @@ class Loader(object):
     def __init__(self) -> None:
         super().__init__()
 
-    @staticmethod
-    def import_modules(path: str) -> dict:
+        self.options = Options()
+
+    def import_modules(self, path: str) -> dict:
         """ Import modules.
 
         :param str path: path to import modules from
@@ -56,6 +59,7 @@ class Loader(object):
                         module = importlib.util.module_from_spec(spec)
                         spec.loader.exec_module(module)
                         module = module.PawnModule()
+                        self.options.add_options(module)
 
                         modules[module.details['Name']] = module
 
@@ -70,4 +74,4 @@ class Loader(object):
         :return dict: dict of modules
         """
 
-        return self.import_modules(f'{os.path.dirname(__file__)}/modules')
+        return self.import_modules(f'{os.path.dirname(os.path.dirname(__file__))}/modules')

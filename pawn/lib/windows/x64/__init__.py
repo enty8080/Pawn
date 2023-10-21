@@ -22,45 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from typing import Optional
-
-from pawn.lib.option import *
-from pawn.lib.options import Options
-
-
-class Module(object):
-    """ Subclass of pawn.lib module.
-
-    This subclass of pawn.lib module is intended for providing
-    wrapper for a module.
-    """
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.details = {
-            'Name': "",
-            'Authors': [
-                ''
-            ],
-            'Arch': "",
-            'Platforms': "",
-        }
-
-    def set(self, option: str, value: Optional[str] = None) -> bool:
-        """ Set module option.
-
-        :param str option: option name
-        :param Optional[str] value: option value
-        :return bool: True if success else False
-        """
-
-        return Options().set_option(self, option, value)
-
-    def run(self) -> None:
-        """ Run this module.
-
-        :return None: None
-        """
-
-        pass
+from .blocks import Blocks
+from .bootstrap import Bootstrap
+from .exit import Exit
+from .reverse_tcp import ReverseTCP

