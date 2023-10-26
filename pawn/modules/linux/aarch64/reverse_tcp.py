@@ -72,7 +72,7 @@ class PawnModule(Module, Assembler):
             lsl x2, x2, 12
 
             mov x0, xzr
-            mov x1, {hex(self.length.value)}
+            mov x1, x2
             mov x2, 7
             mov x3, 34
             mov x4, xzr
