@@ -126,8 +126,8 @@ class PawnModule(Module, Assembler):
         payload += dedent(f"""\
         addr:
             .short 0x2
-            .short {self.port.little.hex()}
-            .word {self.host.little.hex()}
+            .short 0x{self.port.little.hex()}
+            .word 0x{self.host.little.hex()}
         """)
 
         return self.assemble(
