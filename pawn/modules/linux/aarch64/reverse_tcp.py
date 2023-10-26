@@ -52,7 +52,7 @@ class PawnModule(Module, Assembler):
 
         payload += dedent("""\
             mov x0, x12
-            sub sp, sp, 16
+            sub sp, sp, 0x10
             mov x1, sp
             mov x2, 4
             mov x8, 0x3f
@@ -61,7 +61,7 @@ class PawnModule(Module, Assembler):
 
         if self.reliable.value:
             payload += dedent("""\
-                cmn x0, 0x1
+                cmn x0, 1
                 beq fail
             """)
 
@@ -83,7 +83,7 @@ class PawnModule(Module, Assembler):
 
         if self.reliable.value:
             payload += dedent("""\
-                cmn x0, 0x1
+                cmn x0, 1
                 beq fail
             """)
 
@@ -102,7 +102,7 @@ class PawnModule(Module, Assembler):
 
         if self.reliable.value:
             payload += dedent("""\
-                cmn x0, 0x1
+                cmn x0, 1
                 beq fail
             """)
 
