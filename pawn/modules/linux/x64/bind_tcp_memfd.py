@@ -20,8 +20,8 @@ class PawnModule(Module, Assembler):
                 'Ivan Nikolsky (enty8080) - payload developer',
                 'Tomas Globis (Tomasglgg) - payload developer'
             ],
-            'Arch': "x64",
-            'Platform': "linux",
+            'Arch': ARCH_X64,
+            'Platform': OS_LINUX,
             'Type': "bind_tcp",
         })
 

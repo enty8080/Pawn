@@ -22,10 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from .reflective_dll import ReflectiveDLL
+from typing import Union
 
-from .x86 import ReverseTCP as X86ReverseTCP
-from .x64 import ReverseTCP as X64ReverseTCP
+from pex.arch.types import *
+
+from pawn.lib.windows.reflective_dll import ReflectiveDLL
+from pawn.lib.windows.x86 import ReverseTCP as X86ReverseTCP
+from pawn.lib.windows.x64 import ReverseTCP as X64ReverseTCP
 
 
 class Windows(object):
@@ -41,25 +44,25 @@ class Windows(object):
         self.x64_reverse_tcp = X64ReverseTCP()
         self.x86_reverse_tcp = X86ReverseTCP()
 
-    def get_payload(self, arch: str, type: str = 'reverse_tcp',
+    def get_payload(self, arch: Union[Arch, str], type: str = 'reverse_tcp',
                     *args, **kwargs) -> bytes:
         """ Obtain stage payload for the specific platform
         and architecture.
 
-        :param str arch: architecture
+        :param Union[Arch, str] arch: architecture
         :param str type: stage type
         """
 
-        if arch == 'x86':
+        if arch == ARCH_X86:
             if type == 'reverse_tcp':
                 return self.x86_reverse_tcp.get_payload(*args, **kwargs)
 
             raise RuntimeError(f"Invalid payload type: {type}!")
 
-        elif arch == 'x64':
+        elif arch == ARCH_x64:
             if type == 'reverse_tcp':
                 return self.x64_reverse_tcp.get_payload(*args, **kwargs)
 
             raise RuntimeError(f"Invalid payload type: {type}!")
 
-        raise RuntimeError(f"Invalid payload architecture: {arch}!")
+        raise RuntimeError(f"Invalid payload architecture: {str(arch)}!")
