@@ -55,7 +55,7 @@ class Pawn(object):
         :param str type: type
         """
 
-        module = '/'.join((platform, arch, type))
+        module = '/'.join((str(platform), str(arch), type))
         return self.get_pawn(module, platform, arch, type)
 
     def get_pawn(self, module: str,
