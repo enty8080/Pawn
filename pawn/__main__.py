@@ -28,6 +28,9 @@ from pawn.lib.loader import Loader
 from pawn.lib.module import Module
 from pawn.lib.modules import Modules
 
+from pex.platform.types import Platform
+from pex.arch.types import Arch
+
 
 class Pawn(object):
     """ Main class of pawn module.
@@ -42,15 +45,28 @@ class Pawn(object):
         self.loader = Loader()
         self.modules = Modules(self.loader.load_modules())
 
+    def auto_pawn(self, platform: Union[Arch, str],
+                  arch: Union[Arch, str],
+                  type: str) -> Union[Module, None]:
+        """ Select pawn using only platform, arch and type.
+
+        :param Union[Platform, str] platform: platform
+        :param Union[Arch, str] arch: architecture
+        :param str type: type
+        """
+
+        module = '/'.join((platform, arch, type))
+        return self.get_pawn(module, platform, arch, type)
+
     def get_pawn(self, module: str,
-                 platform: Optional[Union[list, str]] = None,
-                 arch: Optional[Union[list, str]] = None,
+                 platform: Optional[Union[list, Platform, str]] = None,
+                 arch: Optional[Union[list, Arch, str]] = None,
                  type: Optional[Union[list, str]] = None) -> Union[Module, None]:
         """ Get pawn module.
 
         :param str module: module name
-        :param Optional[Union[list, str]] platform: list of supported platforms
-        :param Optional[Union[list, str]] arch: list of supported architectures
+        :param Optional[Union[list, Platform, str]] platform: list of supported platforms
+        :param Optional[Union[list, Arch, str]] arch: list of supported architectures
         :param Optional[Union[list, str]] type: list of supported types
         :return Union[Module, None]: module object or None
         """
