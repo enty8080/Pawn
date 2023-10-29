@@ -61,6 +61,7 @@ class Option(object):
         self.big = b''
 
         self.visible = True
+        self.locked = False
 
         if value is not None:
             self.set(value)
@@ -94,13 +95,30 @@ class Option(object):
         if not checker(value):
             raise RuntimeError(f"Invalid value, expected valid {name}!")
 
-    def set(self, value):
-        self.value = value
+    def set(self, value: Any) -> None:
+        """ Set current option value.
 
-    def get(self):
+        :param Any value: value
+        :return None: None
+        """
+
+        if not self.locked:
+            self.value = value
+
+    def get(self) -> Any:
+        """ Get current option value.
+
+        :return Any: value
+        """
+
         return self.value
 
-    def unset(self):
+    def unset(self) -> None:
+        """ Unset current option value.
+
+        :return None: None
+        """
+
         self.value = None
 
 

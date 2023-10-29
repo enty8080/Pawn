@@ -27,6 +27,9 @@ from typing import Optional
 from pawn.lib.option import *
 from pawn.lib.options import Options
 
+from pex.platform.types import *
+from pex.arch.types import *
+
 
 class Module(object):
     """ Subclass of pawn.lib module.
@@ -43,8 +46,8 @@ class Module(object):
             'Authors': [
                 ''
             ],
-            'Arch': "",
-            'Platforms': "",
+            'Arch': None,
+            'Platform': None,
         }
 
     def set(self, option: str, value: Optional[str] = None) -> bool:

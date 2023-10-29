@@ -26,6 +26,9 @@ from typing import Union, Optional
 
 from pawn.lib.module import Module
 
+from pex.platform.types import Platform
+from pex.arch.types import Arch
+
 
 class Modules(object):
     """ Subclass of pawn.lib module.
@@ -55,13 +58,13 @@ class Modules(object):
         if module in self.modules:
             return self.modules[module]
 
-    def check_module(self, module: str, platform: Union[list, str],
-                     arch: Union[list, str], type: Union[list, str]) -> bool:
+    def check_module(self, module: str, platform: Union[list, Platform, str],
+                     arch: Union[list, Arch, str], type: Union[list, str]) -> bool:
         """ Check if module met the requirements.
 
         :param str module: module name
-        :param Union[list, str] platform: platform to check module for
-        :param Union[list, str] arch: architecture to check module for
+        :param Union[list, Platform, str] platform: platform to check module for
+        :param Union[list, Arch, str] arch: architecture to check module for
         :param Union[list, str] type: type to check module for
         :return bool: True if compatible else False
         """
@@ -69,14 +72,14 @@ class Modules(object):
         module = self.get_module(module)
 
         if module:
-            if isinstance(platform, str):
+            if isinstance(platform, str) or isinstance(platform, Platform):
                 if platform and module.details['Platform'] != platform:
                     return False
             else:
                 if platform and module.details['Platform'] not in platform:
                     return False
 
-            if isinstance(arch, str):
+            if isinstance(arch, str) or isinstance(arch, Arch):
                 if arch and module.details['Arch'] != arch:
                     return False
             else:

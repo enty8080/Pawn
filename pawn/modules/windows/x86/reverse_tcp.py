@@ -16,8 +16,8 @@ class PawnModule(Module, Windows):
             'Authors': [
                 'Ivan Nikolsky (enty8080) - payload developer'
             ],
-            'Arch': "x86",
-            'Platform': "windows",
+            'Arch': ARCH_X86,
+            'Platform': OS_WINDOWS,
             'Type': "reverse_tcp",
         })
 

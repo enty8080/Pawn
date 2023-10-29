@@ -19,8 +19,8 @@ class PawnModule(Module, Assembler):
             'Authors': [
                 'Ivan Nikolsky (enty8080) - payload developer'
             ],
-            'Arch': "mipsbe",
-            'Platform': "linux",
+            'Arch': ARCH_MIPSBE,
+            'Platform': OS_LINUX,
             'Type': "reverse_tcp",
         })
 
