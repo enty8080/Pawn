@@ -29,9 +29,9 @@ class PawnModule(Module, Assembler):
         self.port = PortOption(None, 'Port to connect to.', True)
 
         self.length = IntegerOption(None, 'Length of the implant.', False)
-
         self.reliable = BooleanOption('yes', 'Make payload reliable.', True)
-        self.obsolete = BooleanOption('no', 'Use obsolete method (no execveat).', True)
+
+        self.obsolete = BooleanOption('no', 'Use obsolete method (no execveat).', True, True)
 
     def run(self):
         payload = dedent(f"""\

