@@ -17,7 +17,7 @@ class PawnModule(Module, Assembler):
         self.details.update({
             'Name': "linux/mipsle/reverse_tcp",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - payload developer'
+                'Ivan Nikolskiy (enty8080) - payload developer'
             ],
             'Arch': ARCH_MIPSLE,
             'Platform': OS_LINUX,

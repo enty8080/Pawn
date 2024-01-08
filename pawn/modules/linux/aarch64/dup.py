@@ -17,7 +17,7 @@ class PawnModule(Module, Assembler):
         self.details.update({
             'Name': "linux/aarch64/dup",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - payload developer',
+                'Ivan Nikolskiy (enty8080) - payload developer',
             ],
             'Description': "Duplicate file descriptor.",
             'Arch': ARCH_AARCH64,

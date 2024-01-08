@@ -18,7 +18,7 @@ class PawnModule(Module, Assembler):
             'Name': "linux/aarch64/reverse_tcp_loader",
             'Authors': [
                 'pwntools - original payload'
-                'Ivan Nikolsky (enty8080) - payload developer',
+                'Ivan Nikolskiy (enty8080) - payload developer',
             ],
             'Arch': ARCH_AARCH64,
             'Platform': OS_LINUX,

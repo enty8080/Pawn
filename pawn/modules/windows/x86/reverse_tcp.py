@@ -14,7 +14,7 @@ class PawnModule(Module, Windows):
         self.details.update({
             'Name': "windows/x86/reverse_tcp",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - payload developer'
+                'Ivan Nikolskiy (enty8080) - payload developer'
             ],
             'Arch': ARCH_X86,
             'Platform': OS_WINDOWS,

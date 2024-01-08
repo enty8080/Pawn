@@ -17,7 +17,7 @@ class PawnModule(Module, Assembler):
         self.details.update({
             'Name': "linux/x64/memfd",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - payload developer',
+                'Ivan Nikolskiy (enty8080) - payload developer',
                 'Tomas Globis (Tomasglgg) - payload developer'
             ],
             'Arch': ARCH_X64,
