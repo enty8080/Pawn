@@ -1,22 +1,10 @@
 # Pawn
 
-<p>
-    <a href="https://entysec.com">
-        <img src="https://img.shields.io/badge/developer-EntySec-blue.svg">
-    </a>
-    <a href="https://github.com/EntySec/Pawn">
-        <img src="https://img.shields.io/badge/language-Python-blue.svg">
-    </a>
-    <a href="https://github.com/EntySec/Pawn/forks">
-        <img src="https://img.shields.io/github/forks/EntySec/Pawn?color=green">
-    </a>
-    <a href="https://github.com/EntySec/Pawn/stargazers">
-        <img src="https://img.shields.io/github/stars/EntySec/Pawn?color=yellow">
-    </a>
-    <a href="https://www.codefactor.io/repository/github/EntySec/Pawn">
-        <img src="https://www.codefactor.io/repository/github/EntySec/Pawn/badge">
-    </a>
-</p>
+[![Developer](https://img.shields.io/badge/developer-EntySec-blue.svg)](https://entysec.com)
+[![Language](https://img.shields.io/badge/language-Python-blue.svg)](https://github.com/EntySec/Pawn)
+[![Forks](https://img.shields.io/github/forks/EntySec/Pawn?style=flat&color=green)](https://github.com/EntySec/Pawn/forks)
+[![Stars](https://img.shields.io/github/stars/EntySec/Pawn?style=flat&color=yellow)](https://github.com/EntySec/Pawn/stargazers)
+[![CodeFactor](https://www.codefactor.io/repository/github/EntySec/Pawn/badge)](https://www.codefactor.io/repository/github/EntySec/Pawn)
 
 Pawn is a collection of Python techniques used for crafting, manipulating and injecting payloads.
 
