@@ -39,7 +39,7 @@ module = pawn.get_pawn(
 module.set('host', '127.0.0.1')
 module.set('port', 8888)
 
-payload = pawn.run_module(module)
+payload = pawn.run_pawn(module)
 print(len(payload))
 ```
 

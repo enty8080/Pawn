@@ -22,20 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from setuptools import setup, find_packages
+from pex.socket import Socket
+from pawn.lib.templates import Templates
 
-setup(name='pawn',
-      version='1.0.0',
-      description='Pawn is a collection of Python techniques used for crafting, manipulating and injecting payloads.',
-      author='EntySec',
-      author_email='entysec@gmail.com',
-      license='MIT',
-      python_requires='>=3.7.0',
-      packages=find_packages(),
-      include_package_data=True,
-      install_requires=[
-          'pex @ git+https://github.com/EntySec/Pex',
-          'pefile'
-      ],
-      zip_safe=False,
-      )
+
+def include(path: str, **kwargs) -> bytes:
+    """ Include another template.
+
+    :param str path: path to template
+    :return str: template (empty if non-existent)
+    """
+
+    return Templates().get_template(path, **kwargs) or ''
+
+
+def pack_ipv4(host: str, endian: str = 'little') -> bytes:
+    """ Pack IPv4.
+
+    :param str host: pack host
+    :param str endian: little or big
+    :return bytes: packed host
+    """
+
+    return Socket().pack_host(host, endian)
+
+
+def pack_port(port: int, endian: str = 'little') -> bytes:
+    """ Pack port.
+
+    :param int port: port to pack
+    :param str endian: little or big
+    :return bytes: packed port
+    """
+
+    return Socket().pack_port(port, endian)

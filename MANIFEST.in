@@ -1,1 +1,2 @@
 recursive-include pawn/modules *
+recursive-include pawn/templates *

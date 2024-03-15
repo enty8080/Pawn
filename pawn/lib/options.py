@@ -150,7 +150,7 @@ class Options(object):
                 if attr.visible:
                     if value is not None:
                         attr.set(value)
-                        object.advanced[option]['Value'] = str(value)
+                        object.advanced[option]['Value'] = attr.value
                     else:
                         attr.unset()
                         object.advanced[option]['Value'] = None
@@ -164,7 +164,7 @@ class Options(object):
                 if attr.visible:
                     if value is not None:
                         attr.set(value)
-                        object.options[option]['Value'] = str(value)
+                        object.options[option]['Value'] = attr.value
                     else:
                         attr.unset()
                         object.options[option]['Value'] = None
@@ -208,7 +208,8 @@ class Options(object):
                         'Value': option.value,
                         'Description': option.description,
                         'Required': option.required,
-                        'Visible': option.visible
+                        'Visible': option.visible,
+                        'Object': option,
                     }
                 }
             )

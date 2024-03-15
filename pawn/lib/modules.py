@@ -25,6 +25,7 @@ SOFTWARE.
 from typing import Union, Optional
 
 from pawn.lib.module import Module
+from pawn.lib.templates import Templates
 
 from pex.platform.types import Platform
 from pex.arch.types import Arch
@@ -47,6 +48,7 @@ class Modules(object):
         super().__init__()
 
         self.modules = modules
+        self.templates = Templates()
 
     def get_module(self, module: str) -> Union[Module, None]:
         """ Get Pawn module object.
@@ -130,4 +132,5 @@ class Modules(object):
             raise RuntimeError(
                 f"These options are failed to validate: {', '.join(missed)}!")
 
+        module.template = self.templates.get_module_template(module)
         return module.run()

@@ -26,6 +26,7 @@ import os
 import importlib.util
 
 from pawn.lib.options import Options
+from pawn.lib.templates import Templates
 
 
 class Loader(object):
@@ -59,12 +60,12 @@ class Loader(object):
                         module = importlib.util.module_from_spec(spec)
                         spec.loader.exec_module(module)
                         module = module.PawnModule()
-                        self.options.add_options(module)
 
+                        self.options.add_options(module)
                         modules[module.details['Name']] = module
 
-                    except BaseException:
-                        pass
+                    except BaseException as e:
+                        print(str(e))
 
         return modules
 
